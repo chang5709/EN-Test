@@ -7,7 +7,7 @@
 
   <!-- <div class="grid-container" id="gridContainer"></div> -->
 
-  <div>{{ test }}</div>
+  <div>{{ test2 }}</div>
   <div class="button-container">
     <button @click="checkAnswer">確認</button>
     <button @click="showHint">提示</button>
