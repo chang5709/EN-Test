@@ -1,13 +1,10 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
-import test from './components/test.vue'
+import test from './components/Test.vue'
 </script>
 
 <template>
-
-<header>
-</header>
 
 <main>
   <!-- <HelloWorld msg="You did it!" /> -->
