@@ -7,10 +7,10 @@
   </head>
   <div class="content">
     <div class="wrap">
-      <!-- <div v-html="gridContainer"></div> -->
-      <input v-for="item in randomCount" type="text" class="box" maxlength="1" autocapitalize="off" autocomplete="off"
-        v-bind:id="i"></input>
+      <input v-for="(item, index) in answer" type="text" class="box" maxlength="1" autocapitalize="off"
+        autocomplete="off" v-bind:id="index"></input>
     </div>
+    <div class="hint"></div>
     <div class="button-container">
       <button @click="checkAnswer">確認</button>
       <button @click="showHint">提示</button>
@@ -18,53 +18,64 @@
     </div>
 
     <div class="result">
-      <span id="correctCount">答對: 0</span>
-      <span id="incorrectCount">答錯: 0</span>
+      <span id="correctCount">答對: {{ correctCount }}</span>
+      <span id="incorrectCount">答錯: {{ incorrectCount }}</span>
     </div>
   </div>
 </template>
 
 <script>
 
+
 export default {
+
   data() {
     return {
-      randomCount: 5,
-      answerWord: 'apple',
-      answers: [],
-      userInputs: [],
-      gridContainer: this.generateGrid(),
       correctCount: 0,
       incorrectCount: 0,
+      answer: [],
+      problem: {},
+      problems: [
+        { word: "apple", hint: "a" },
+        { word: "banana", hint: "b" },
+        { word: "cow", hint: "c" }
+      ],
     }
   },
   methods: {
-    // 隨機生成格子
     generateGrid: function () {
-      let box = ''
-      for (let i = 0; i < this.randomCount; i++) {
-        var letter = String.fromCharCode(65 + Math.floor(Math.random() * 26)); // 隨機字母 A-Z
-        this.answers.push(letter);
-        box += '<input type="text" class="box" maxlength="1" autocapitalize="off" autocomplete="off" v-bind:id="i">"&nbsp"';
-      }
-      return box;
+      this.problem = this.problems[Math.floor(Math.random() * (this.problems.length))];
+      console.log(this.problem)
+      this.answer = this.problem.word.split('');
+      console.log(this.answer)
+
     },
 
     // 確認答案
     checkAnswer: function () {
-      correctCount = 0;
-      incorrectCount = 0;
+      // correctCount = 0;
+      // incorrectCount = 0;
 
-      answers.forEach((answer, index) => {
-        if (userInputs[index] === answer) {
-          correctCount++;
-        } else {
-          incorrectCount++;
+      for (let i = 0; i < this.answer.length; i++) {
+        // console.log('-------------')
+        // console.log($(`#${i}`).val())
+
+        $(`#${i}`).val($(`#${i}`).val().toLowerCase())
+        console.log($(`#${i}`).val().toLowerCase())
+
+        if ($(`#${i}`).val() != this.answer[i]) {
+          this.incorrectCount += 1;
+          alert('Wrong answer!')
+          return
         }
-      });
 
-      document.getElementById('correctCount').textContent = `答對: ${correctCount}`;
-      document.getElementById('incorrectCount').textContent = `答錯: ${incorrectCount}`;
+      }
+      this.correctCount += 1;
+      for(let i = 0; i < this.answer.length; i++){
+        $(`#${i}`).val('')
+      }
+
+      this.generateGrid()
     },
 
     // 提示功能
@@ -78,6 +89,9 @@ export default {
       speech.lang = 'en-US';
       window.speechSynthesis.speak(speech);
     },
+  },
+  mounted() {
+    this.generateGrid()
   }
 }
 
@@ -85,7 +99,41 @@ export default {
 </script>
 
 <style>
-main {
+.content {
+  text-align: center;
+  width: 100%;
+  align-items: center;
+  position: absolute;
+  top: 30%;
+}
+
+.box {
+  margin: 0 5px;
+  width: 30px;
+  height: 40px;
+}
+
+.wrap {
+  width: 80%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 15px;
+  margin: auto;
+  margin-bottom: 50px;
+}
+
+.result {
+  display: flex;
+  justify-content: space-around;
+}
+
+button {
+  height: 40px;
+  width: 80px;
+}
+
+/* main {
   width: 100%;
   height: 100vh;
   display: flex;
@@ -108,5 +156,5 @@ main {
 button {
   height: 40px;
   width: 80px;
-}
+} */
 </style>
